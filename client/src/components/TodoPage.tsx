@@ -78,7 +78,7 @@ export default function TodoPage() {
         </div>
 
         {todos && todos.map((todo: any) => (
-            <div key={todo.id}>
+            <div key={todo._id}>
                 <input type="checkbox" checked={todo.completed} onChange={() => toggleCompleted(todo._id, todo.completed)} className="border-2 border-gray-200 p-2 rounded-md m-2"/>
                 <input type="text" value={todo.title} onChange={(e) => updateTitle(todo._id, e.target.value)} className="border-2 border-gray-200 p-2 rounded-md m-2"/>
                 <button className="bg-red-500 text-white p-2 rounded-md" onClick={() => deleteTodos(todo._id)}>delete</button>

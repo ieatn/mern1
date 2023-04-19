@@ -7,6 +7,7 @@ import Login from './components/Login'
 import Register from './components/Register'
 import TodoPage from './components/TodoPage'
 import AuthProvider from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: '/todos',
     element: <TodoPage />,
+  },
+  {
+    path: '/protected-route',
+    element: <ProtectedRoute />,
   },
 ])
 
