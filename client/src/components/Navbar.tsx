@@ -12,6 +12,8 @@ export default function Navbar() {
             <div className="ml-auto space-x-6 flex">
                 
                 <Link to={`/`} className={`hover:text-gray-300`}>Home</Link>
+                <Link to={`/todos`} className={`hover:text-gray-300`}>Dashboard</Link>
+
                 {isAuth ? 
                     (
                         <div className='space-x-6'>
