@@ -105,6 +105,7 @@ app.post('/login', async (req, res) => {
         res.status(400).json({err: err.message})
     }
 })
+
 app.post('/register', async (req, res) => {
     const {username, password} = req.body
     try {

@@ -4,12 +4,13 @@ import { AuthContext } from '../context/AuthContext'
 
 export default function Navbar() {
 
-    const {isAuth, login, logout}:any = useContext(AuthContext)
+    const {isAuth, login, logout, name}:any = useContext(AuthContext)
 
     return (
         <nav className="w-full h-16 bg-gray-800 flex items-center justify-center text-white px-6 p-2">
             <h1>Navbar</h1>
             <div className="ml-auto space-x-6 flex">
+                <span>Hello, {name}</span>
                 <Link to={`/`} className={`hover:text-gray-300`}>Home</Link>
                 {isAuth ? 
                     (
