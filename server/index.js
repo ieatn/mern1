@@ -30,12 +30,19 @@ const Todo = require('./models/TodoModel')
 
 
 // middleware
-// annoying bug forgot to add authorization token into header of postman
+// needs to be put above the routes before initialition error
 const isLoggedIn = async (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1]
-    if (!token) {
-        return res.status(401).json({error: 'Unauthorized: No token provided'})
+    // throw error to remind instead of crashing the server
+    const { authorization } = req.headers
+    if (!authorization) {
+        return res.status(401).json({error: 'You forgot the header'})
     }
+    // dont forget space for split
+    const token = authorization.split(' ')[1]
+    // const token = req.headers.authorization.split(' ')[1]
+    // if (!token) {
+    //     return res.status(401).json({error: 'Unauthorized: No token provided'})
+    // }
     try {
         const {_id} = verifyToken(token)
         req.user = await User.findOne({_id}).select('_id')
@@ -46,6 +53,7 @@ const isLoggedIn = async (req, res, next) => {
 }
 
 // ROUTES
+// using express router means you dont need to add isloggedin into every route, less work, but need routes and controllers
 app.get('/', isLoggedIn, async (req, res) => {
     // res.json({msg: 'get'})
     const todos = await Todo.find()
@@ -53,7 +61,7 @@ app.get('/', isLoggedIn, async (req, res) => {
 })
 
 // destructured variable has to be same as json input from frontend
-app.post('/', async (req, res) => {
+app.post('/', isLoggedIn, async (req, res) => {
     // const {name} = req.body
     // res.json(name)
     const {title} = req.body
@@ -61,7 +69,7 @@ app.post('/', async (req, res) => {
     res.json(todo)
 })
 
-app.put('/:id', async (req, res) => {
+app.put('/:id', isLoggedIn, async (req, res) => {
     // res.json({msg: 'updated'})
     const {id} = req.params
     const todo = await Todo.findById(id)
@@ -73,7 +81,7 @@ app.put('/:id', async (req, res) => {
     res.json(todo)
 })
 
-app.delete('/:id', async (req, res) => {
+app.delete('/:id', isLoggedIn, async (req, res) => {
     // res.json({msg: 'deleted'})
     const {id} = req.params
     const todo = await Todo.findByIdAndDelete(id)
@@ -128,7 +136,7 @@ app.post('/register', async (req, res) => {
 // app.get('/protected-route', isLoggedIn, async (req, res) => {
 //     res.json({msg:'SECRET MESSAGE MEANS YOU ARE LOGGED IN'})
 // })
-app.get('/protected-route', async (req, res) => {
+app.get('/protected-route', isLoggedIn, async (req, res) => {
     const secret = {message: 'connected to server'}
     res.send(secret)
 })
