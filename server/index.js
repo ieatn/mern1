@@ -22,10 +22,31 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(err)
     })
 
+
+
+
 // now have access to table 
 const Todo = require('./models/TodoModel')
 
-app.get('/', async (req, res) => {
+
+// middleware
+// annoying bug forgot to add authorization token into header of postman
+const isLoggedIn = async (req, res, next) => {
+    const token = req.headers.authorization.split(' ')[1]
+    if (!token) {
+        return res.status(401).json({error: 'Unauthorized: No token provided'})
+    }
+    try {
+        const {_id} = verifyToken(token)
+        req.user = await User.findOne({_id}).select('_id')
+        next()
+    } catch (err) {   
+        res.status(401).json({ error: 'Unauthorized: Invalid token' })    
+    }
+}
+
+// ROUTES
+app.get('/', isLoggedIn, async (req, res) => {
     // res.json({msg: 'get'})
     const todos = await Todo.find()
     res.json(todos)
@@ -74,24 +95,9 @@ const createToken = (id) => {
 const verifyToken = (token) => {
     try {
       const decoded = jwt.verify(token, process.env.SECRET)
-      return decoded.id
+      return decoded
     } catch (err) {
       throw new Error('Invalid token')
-    }
-}
-
-// middleware
-const isLoggedIn = (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1]
-    if (!token) {
-        return res.status(401).json({error: 'Unauthorized: No token provided'})
-    }
-    try {
-        const decoded = verifyToken(token)
-        req.userId = decoded.userId
-        next()
-    } catch (err) {   
-        res.status(401).json({ error: 'Unauthorized: Invalid token' })    
     }
 }
 
@@ -115,7 +121,7 @@ app.post('/register', async (req, res) => {
         const token = createToken(user._id)
         res.status(200).json({user, token})
     } catch (err) {
-        res.status(400).json({err:  err.message})
+        res.status(400).json({err: err.message})
     }
 })
 

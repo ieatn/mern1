@@ -9,7 +9,7 @@ export default function Register() {
 
     const [error, setError] = useState(null)
 
-    const {isAuth, login} = useContext(AuthContext)
+    const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 
     const register = async (e) => {
         e.preventDefault()
@@ -23,6 +23,8 @@ export default function Register() {
             })
             const data = await res.json()
             if (res.ok) {
+                setName(data.user.username)
+                setToken(data.token)
                 console.log('logged in')
                 setError(null)
                 login()

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import Navbar from "./Navbar"
 
+// you can still access this page by /todos, need to stop this by adding middleware
+
 export default function TodoPage() {
 
     const [todos, setTodos] = useState([]) 

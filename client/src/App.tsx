@@ -10,26 +10,26 @@ function App() {
 
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0M2VkNmFlYzM3Mjk5YTdlOTQ2YmI0MSIsImlhdCI6MTY4MTg1MDY3M30.B-NAZE7hZykDlOMy6zGcRn1yLH34Wj4dtfw590UEhQo'
 
-  useEffect(() => {
-    const getProtectedRoute = async () => {
-      await fetch('http://localhost:4000/protected-route', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": 'application/json'
-        }
-      })
-      setShowProtectedRoute(true)
-    }
-    if (token) {
-      getProtectedRoute()
-    }
-  }, [])
+  // useEffect(() => {
+  //   const getProtectedRoute = async () => {
+  //     await fetch('http://localhost:4000/protected-route', {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": 'application/json'
+  //       }
+  //     })
+  //     setShowProtectedRoute(true)
+  //   }
+  //   if (token) {
+  //     getProtectedRoute()
+  //   }
+  // }, [])
 
   return (
     <div className="App">
       <Navbar />
-      {showProtectedRoute && <ProtectedRoute />}
+      {/* {showProtectedRoute && <ProtectedRoute />} */}
     </div>
   )
 }

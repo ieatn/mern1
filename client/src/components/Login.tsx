@@ -9,7 +9,7 @@ export default function Login() {
 
     const [error, setError] = useState(null)
 
-    const {isAuth, login, name, setName} = useContext(AuthContext)
+    const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 
     const loginUser = async (e) => {
         e.preventDefault()
@@ -24,7 +24,7 @@ export default function Login() {
             const data = await res.json()
             if (res.ok) {
                 setName(data.user.username)
-
+                setToken(data.token)
                 console.log('logged in')
                 setError(null)
                 login()
