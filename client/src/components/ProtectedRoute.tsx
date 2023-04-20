@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react"
 
-export default function ProtectedRoute() {
+export default function ProtectedRoute({token}) {
 
     const [secret, setSecret] = useState('')
 
     useEffect(() => {
-        const getSecretMessage = async () => {
-            const res = await fetch('http://localhost:4000/protected-route');
+        const getSecretMessage = async (token: string) => {
+            const res = await fetch('http://localhost:4000/protected-route', {
+                method: 'GET',
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            })
             const data = await res.json();
             console.log(data);
             setSecret(data.message);
         }
-        getSecretMessage();
+        getSecretMessage(token);
     }, [])
 
     return (

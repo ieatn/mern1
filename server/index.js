@@ -133,9 +133,6 @@ app.post('/register', async (req, res) => {
     }
 })
 
-// app.get('/protected-route', isLoggedIn, async (req, res) => {
-//     res.json({msg:'SECRET MESSAGE MEANS YOU ARE LOGGED IN'})
-// })
 app.get('/protected-route', isLoggedIn, async (req, res) => {
     const secret = {message: 'logged in with token'}
     res.send(secret)

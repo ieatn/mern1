@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Navbar from "./Navbar"
+import { AuthContext } from "../context/AuthContext"
+
 
 // you can still access this page by /todos, need to stop this by adding middleware
 
 export default function TodoPage() {
+
+    const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
+
 
     const [todos, setTodos] = useState([]) 
     const [todo, setTodo] = useState('')
@@ -14,6 +19,7 @@ export default function TodoPage() {
             const res = await fetch('http://localhost:4000/', {
                 method: 'GET',
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
             })

@@ -1,49 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProtectedRoute from './components/ProtectedRoute'
+import {AuthContext} from './context/AuthContext'
 
 function App() {
 
+  const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
+
   const [showProtectedRoute, setShowProtectedRoute] = useState(false)
 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0M2VkNmFlYzM3Mjk5YTdlOTQ2YmI0MSIsImlhdCI6MTY4MTg1MDY3M30.B-NAZE7hZykDlOMy6zGcRn1yLH34Wj4dtfw590UEhQo'
-
-  const getProtectedRoute = async () => {
-    console.log('hi')
-    await fetch('http://localhost:4000/protected-route', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": 'application/json'
-      }
-    })
-    setShowProtectedRoute(true)
-  }
-
-  // useEffect(() => {
-  //   const getProtectedRoute = async () => {
-  //     await fetch('http://localhost:4000/protected-route', {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         "Content-Type": 'application/json'
-  //       }
-  //     })
-  //     setShowProtectedRoute(true)
-  //   }
-  //   if (token) {
-  //     getProtectedRoute()
-  //   }
-  // }, [])
+  useEffect(() => {
+    setShowProtectedRoute(!showProtectedRoute)
+  }, [isAuth])
 
   return (
     <div className="App">
       <Navbar />
-      <button className='border' onClick={getProtectedRoute}>click</button>
-      <div>authenticated: {showProtectedRoute ? 'true' : 'false'}</div>
-      {/* {showProtectedRoute && <ProtectedRoute />} */}
+      {showProtectedRoute && <ProtectedRoute token={token}/>}
+      <div>
+        <p>name: {name}</p>
+        <p>token: {token}</p>
+        <p>auth: {isAuth ? 'true' : 'false'}</p>
+      </div>
     </div>
   )
 }
