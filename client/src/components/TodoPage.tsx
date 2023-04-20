@@ -3,7 +3,7 @@ import Navbar from "./Navbar"
 import { AuthContext } from "../context/AuthContext"
 
 
-// you can still access this page by /todos, need to stop this by adding middleware
+// you can still access this page by /todos, need to stop this by adding middleware, add an error page
 
 export default function TodoPage() {
 
