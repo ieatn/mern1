@@ -6,6 +6,9 @@ const TodoSchema = new Schema({
     title: {
         type: String,
     },
+    completed: {
+        type: Boolean,
+    },
     user_id: {
         type: String,
         required: true,

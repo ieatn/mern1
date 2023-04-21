@@ -29,7 +29,7 @@ mongoose.connect(process.env.MONGO_URI)
 const Todo = require('./models/TodoModel')
 
 
-// middleware
+// middleware should be split into new folder and export to routes/controllers
 const isLoggedIn = async (req, res, next) => {
     const { authorization } = req.headers
     if (!authorization) {
@@ -38,13 +38,8 @@ const isLoggedIn = async (req, res, next) => {
     const token = authorization.split(' ')[1]
     // find a user in this database by token
     try {
-        // token is undefined and user is null bug
-        const {_id} = verifyToken(token)
-        console.log(_id)
-        // store user id in req object so all routes can use req
-        req.user = await User.findOne({_id}).select('_id')
-        console.log('user: ', req.user)
-        req._id = 3
+        const {id} = jwt.verify(token, process.env.SECRET)
+        req.user = await User.findOne({_id: id}).select('_id')
         next()
     } catch (err) {   
         res.status(401).json({ error: 'request is not authorized' })    
@@ -55,17 +50,25 @@ const isLoggedIn = async (req, res, next) => {
 // using express router means you dont need to add isloggedin into every route, less work, but need routes and controllers
 app.get('/', isLoggedIn, async (req, res) => {
     // find and fetch all todos only by user_id from current logged in user
-    const user_id = req._id
-    const todos = await Todo.find({user_id})
-    res.json(todos)
+    try {
+        const user_id = req.user._id
+        const todos = await Todo.find({user_id})
+        res.json(todos)
+    } catch(err) {
+        res.status(400).json({error: err.message})
+    }
 })
 
 // destructured variable has to be same as json input from frontend
 app.post('/', isLoggedIn, async (req, res) => {
-    const {title} = req.body
-    const user_id = req._id
-    const todo = await Todo.create({title, user_id})
-    res.json(todo)
+    try {
+        const {title} = req.body
+        const user_id = req.user._id
+        const todo = await Todo.create({title, user_id})
+        res.json(todo)
+    } catch(err) {
+        res.status(400).json({error: err.message})
+    }
 })
 
 app.put('/:id', isLoggedIn, async (req, res) => {
@@ -100,6 +103,7 @@ const createToken = (id) => {
 const verifyToken = (token) => {
     try {
       const decoded = jwt.verify(token, process.env.SECRET)
+      console.log(decoded)
       return decoded
     } catch (err) {
       throw new Error('Invalid token')
