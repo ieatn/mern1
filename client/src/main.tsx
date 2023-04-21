@@ -20,11 +20,11 @@ function Routes() {
     },
     {
       path: '/login',
-      element: <Login />,
+      element: isAuth ? <App /> : <Login />,
     },
     {
       path: '/register',
-      element: <Register />,
+      element: isAuth ? <App /> : <Register />,
     },
     {
       path: '/todos',

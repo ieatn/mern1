@@ -10,8 +10,8 @@ export default function TodoPage() {
     const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 
 
-    const [todos, setTodos] = useState([]) 
     const [todo, setTodo] = useState('')
+    const [todos, setTodos] = useState([]) 
 
     useEffect(() => {
         const fetchTodos = async () => {
@@ -30,9 +30,15 @@ export default function TodoPage() {
     }, [todos])
 
 
+    // forgot to add authorization headers to each request
+
     const deleteTodos = async (id: string) => {
         await fetch(`http://localhost:4000/${id}`, {
             method: 'DELETE',
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
         })
         setTodos(todos.filter((todo: any) => todo.id !== id))
     }
@@ -42,7 +48,8 @@ export default function TodoPage() {
         const res = await fetch('http://localhost:4000/', {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({title})
         })
@@ -55,6 +62,7 @@ export default function TodoPage() {
         await fetch(`http://localhost:4000/${id}`, {
             method: 'PUT',
             headers: {
+                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({title})

@@ -30,47 +30,45 @@ const Todo = require('./models/TodoModel')
 
 
 // middleware
-// needs to be put above the routes before initialition error
 const isLoggedIn = async (req, res, next) => {
-    // throw error to remind instead of crashing the server
     const { authorization } = req.headers
     if (!authorization) {
-        return res.status(401).json({error: 'You forgot the header'})
+        return res.status(401).json({error: 'you forgot token in authorization header'})
     }
-    // dont forget space for split
     const token = authorization.split(' ')[1]
-    // const token = req.headers.authorization.split(' ')[1]
-    // if (!token) {
-    //     return res.status(401).json({error: 'Unauthorized: No token provided'})
-    // }
+    // find a user in this database by token
     try {
+        // token is undefined and user is null bug
         const {_id} = verifyToken(token)
+        console.log(_id)
+        // store user id in req object so all routes can use req
         req.user = await User.findOne({_id}).select('_id')
+        console.log('user: ', req.user)
+        req._id = 3
         next()
     } catch (err) {   
-        res.status(401).json({ error: 'Unauthorized: Invalid token' })    
+        res.status(401).json({ error: 'request is not authorized' })    
     }
 }
 
 // ROUTES
 // using express router means you dont need to add isloggedin into every route, less work, but need routes and controllers
 app.get('/', isLoggedIn, async (req, res) => {
-    // res.json({msg: 'get'})
-    const todos = await Todo.find()
+    // find and fetch all todos only by user_id from current logged in user
+    const user_id = req._id
+    const todos = await Todo.find({user_id})
     res.json(todos)
 })
 
 // destructured variable has to be same as json input from frontend
 app.post('/', isLoggedIn, async (req, res) => {
-    // const {name} = req.body
-    // res.json(name)
     const {title} = req.body
-    const todo = await Todo.create({title})
+    const user_id = req._id
+    const todo = await Todo.create({title, user_id})
     res.json(todo)
 })
 
 app.put('/:id', isLoggedIn, async (req, res) => {
-    // res.json({msg: 'updated'})
     const {id} = req.params
     const todo = await Todo.findById(id)
     todo.title = req.body.title
@@ -82,7 +80,6 @@ app.put('/:id', isLoggedIn, async (req, res) => {
 })
 
 app.delete('/:id', isLoggedIn, async (req, res) => {
-    // res.json({msg: 'deleted'})
     const {id} = req.params
     const todo = await Todo.findByIdAndDelete(id)
     res.json(todo)

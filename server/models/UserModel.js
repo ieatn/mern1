@@ -10,7 +10,8 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    
 })
 
 userSchema.statics.register = async function(username, password) {
@@ -19,6 +20,7 @@ userSchema.statics.register = async function(username, password) {
         throw new Error('username taken');
     }
     const user = await this.create({ username, password });
+    return user
 }
 
 userSchema.statics.login = async function(username, password) {

@@ -5,6 +5,10 @@ const Schema = mongoose.Schema
 const TodoSchema = new Schema({
     title: {
         type: String,
+    },
+    user_id: {
+        type: String,
+        required: true,
     }
 })
 
