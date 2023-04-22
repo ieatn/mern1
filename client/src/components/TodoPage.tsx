@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import { AuthContext } from "../context/AuthContext"
-
-
-// you can still access this page by /todos, need to stop this by adding middleware, add an error page
+import API_URL from '../api/config.js'
 
 export default function TodoPage() {
 
@@ -16,7 +14,7 @@ export default function TodoPage() {
     useEffect(() => {
         const fetchTodos = async () => {
             // make sure to use http not https keep getting typo errors
-            const res = await fetch('http://localhost:4000/', {
+            const res = await fetch(`${API_URL}/api/todos/`, {
                 method: 'GET',
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -33,7 +31,7 @@ export default function TodoPage() {
     // forgot to add authorization headers to each request
 
     const deleteTodos = async (id: string) => {
-        await fetch(`http://localhost:4000/${id}`, {
+        await fetch(`${API_URL}/api/todos/${id}`, {
             method: 'DELETE',
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -45,7 +43,7 @@ export default function TodoPage() {
 
     const addTodo = async () => {
         const title = todo
-        const res = await fetch('http://localhost:4000/', {
+        const res = await fetch(`${API_URL}/api/todos/`, {
             method: 'POST',
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -59,7 +57,7 @@ export default function TodoPage() {
     }
 
     const updateTitle = async (id: string, title: string) => {
-        await fetch(`http://localhost:4000/${id}`, {
+        await fetch(`${API_URL}/api/todos/${id}`, {
             method: 'PUT',
             headers: {
                 "Authorization": `Bearer ${token}`,

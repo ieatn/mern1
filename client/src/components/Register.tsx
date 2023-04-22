@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import Navbar from "./Navbar"
 import {AuthContext} from "../context/AuthContext"
+import API_URL from '../api/config.js'
 
 export default function Register() {
 
@@ -14,9 +15,10 @@ export default function Register() {
     const register = async (e) => {
         e.preventDefault()
         try {
-            const res = await fetch("http://localhost:4000/register", {
+            const res = await fetch(`${API_URL}/api/users/register`, {
                 method: "POST",
                 headers: {
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({username, password})

@@ -5,10 +5,8 @@ app.use(express.json())
 const dotenv = require('dotenv')
 dotenv.config()
 
-
 const cors = require('cors')
 app.use(cors())
-
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGO_URI)
@@ -22,121 +20,13 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(err)
     })
 
-
-
-
-// now have access to table 
-const Todo = require('./models/TodoModel')
-
-
-// middleware should be split into new folder and export to routes/controllers
-const isLoggedIn = async (req, res, next) => {
-    const { authorization } = req.headers
-    if (!authorization) {
-        return res.status(401).json({error: 'you forgot token in authorization header'})
-    }
-    const token = authorization.split(' ')[1]
-    // find a user in this database by token
-    try {
-        const {id} = jwt.verify(token, process.env.SECRET)
-        req.user = await User.findOne({_id: id}).select('_id')
-        next()
-    } catch (err) {   
-        res.status(401).json({ error: 'request is not authorized' })    
-    }
-}
-
 // ROUTES
-// using express router means you dont need to add isloggedin into every route, less work, but need routes and controllers
-app.get('/', isLoggedIn, async (req, res) => {
-    // find and fetch all todos only by user_id from current logged in user
-    try {
-        const user_id = req.user._id
-        const todos = await Todo.find({user_id})
-        res.json(todos)
-    } catch(err) {
-        res.status(400).json({error: err.message})
-    }
-})
 
-// destructured variable has to be same as json input from frontend
-app.post('/', isLoggedIn, async (req, res) => {
-    try {
-        const {title} = req.body
-        const user_id = req.user._id
-        const todo = await Todo.create({title, user_id})
-        res.json(todo)
-    } catch(err) {
-        res.status(400).json({error: err.message})
-    }
-})
+// same url so todo router middleware is hitting user router which is a problem
+// change base url to deal with conflicting routers
 
-app.put('/:id', isLoggedIn, async (req, res) => {
-    const {id} = req.params
-    const todo = await Todo.findById(id)
-    todo.title = req.body.title
-    if (req.body.completed !== undefined) {
-        todo.completed = req.body.completed
-    }
-    await todo.save()
-    res.json(todo)
-})
+const todoRoutes = require('./routes/todoRoutes')
+app.use('/api/todos', todoRoutes)
 
-app.delete('/:id', isLoggedIn, async (req, res) => {
-    const {id} = req.params
-    const todo = await Todo.findByIdAndDelete(id)
-    res.json(todo)
-})
-
-
-// users
-
-const User = require('./models/UserModel')
-
-const jwt = require('jsonwebtoken')
-
-const createToken = (id) => {
-    const token = jwt.sign({id}, process.env.SECRET)
-    return token
-}
-
-const verifyToken = (token) => {
-    try {
-      const decoded = jwt.verify(token, process.env.SECRET)
-      console.log(decoded)
-      return decoded
-    } catch (err) {
-      throw new Error('Invalid token')
-    }
-}
-
-app.post('/login', async (req, res) => {
-    const {username, password} = req.body
-    try {
-        const user = await User.login(username, password)
-        const token = createToken(user._id)
-        res.status(200).json({user, token})
-    } catch (err) {
-        res.status(400).json({err: err.message})
-    }
-})
-
-app.post('/register', async (req, res) => {
-    const {username, password} = req.body
-    try {
-        // delete all users in database
-        // await User.deleteMany({})
-        const user = await User.register(username, password)
-        const token = createToken(user._id)
-        res.status(200).json({user, token})
-    } catch (err) {
-        res.status(400).json({err: err.message})
-    }
-})
-
-app.get('/protected-route', isLoggedIn, async (req, res) => {
-    const secret = {message: 'logged in with token'}
-    res.send(secret)
-})
-
-
+const userRoutes = require('./routes/userRoutes')
+app.use('/api/users', userRoutes) 
