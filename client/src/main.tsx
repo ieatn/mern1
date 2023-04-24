@@ -11,7 +11,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 
 // need to add context to the main file to access isauth 
 function Routes() {
-  const {isAuth} = useContext(AuthContext)
+  const { isAuth }: any = useContext(AuthContext)
 
   const router = createBrowserRouter([
     {
@@ -29,10 +29,6 @@ function Routes() {
     {
       path: '/todos',
       element: isAuth ? <TodoPage /> : <Navigate to='/login' />,
-    },
-    {
-      path: '/protected-route',
-      element: <ProtectedRoute />,
     },
   ])
 
