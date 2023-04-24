@@ -39,7 +39,7 @@ function Routes() {
   return (
     <React.StrictMode>
       <RouterProvider router={router} />
-    </React.StrictMode>,
+    </React.StrictMode>
   )
 }
 
@@ -49,7 +49,7 @@ function Main() {
       <AuthProvider>
         <Routes />
       </AuthProvider>
-    </React.StrictMode>,
+    </React.StrictMode>
   )
 }
 
