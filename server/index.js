@@ -20,11 +20,6 @@ mongoose.connect(process.env.MONGO_URI)
         console.log(err)
     })
 
-// ROUTES
-
-// same url so todo router middleware is hitting user router which is a problem
-// change base url to deal with conflicting routers
-
 const todoRoutes = require('./routes/todoRoutes')
 app.use('/api/todos', todoRoutes)
 
@@ -34,6 +29,3 @@ app.use('/api/users', userRoutes)
 app.get('/', (req, res) => {
     res.send('hello world')
 })
-
-module.exports = app;
-export default app;
