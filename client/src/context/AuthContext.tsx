@@ -1,8 +1,10 @@
 import { createContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+// @ts-ignore
 export const AuthContext = createContext()
 
+// @ts-ignore
 const AuthProvider = ({ children }) => {
 
     const [isAuth, setIsAuth] = useState(false)

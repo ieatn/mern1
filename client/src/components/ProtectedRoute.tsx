@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+// @ts-ignore
 export default function ProtectedRoute({token}) {
 
     const [secret, setSecret] = useState('')

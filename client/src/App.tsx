@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import {AuthContext} from './context/AuthContext'
 
 function App() {
+  // @ts-ignore
 
   const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 

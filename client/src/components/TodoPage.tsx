@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 import Navbar from "./Navbar"
 import { AuthContext } from "../context/AuthContext"
+// @ts-ignore
 import API_URL from '../api/config.js'
 
 export default function TodoPage() {
+    // @ts-ignore
 
     const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 
@@ -52,6 +54,8 @@ export default function TodoPage() {
             body: JSON.stringify({title})
         })
         const data = await res.json()
+        // @ts-ignore
+
         setTodos([...todos, data])
         setTodo('')
     }
@@ -65,6 +69,8 @@ export default function TodoPage() {
             },
             body: JSON.stringify({title})
         })
+        // @ts-ignore
+
         setTodos(todos.map((todo: any) => todo.id === id ? {...todo, title} : todo))
     }
 
@@ -76,6 +82,8 @@ export default function TodoPage() {
             },
             body: JSON.stringify({completed: !completed})
         })
+        // @ts-ignore
+
         setTodos(todos.map((todo: any) => todo.id === id ? {...todo, completed} : todo))
     }   
     

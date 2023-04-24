@@ -7,7 +7,6 @@ import Login from './components/Login'
 import Register from './components/Register'
 import TodoPage from './components/TodoPage'
 import AuthProvider, { AuthContext } from './context/AuthContext'
-import ProtectedRoute from './components/ProtectedRoute'
 
 // need to add context to the main file to access isauth 
 function Routes() {

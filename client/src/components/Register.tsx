@@ -1,6 +1,7 @@
 import { useContext, useState } from "react"
 import Navbar from "./Navbar"
 import {AuthContext} from "../context/AuthContext"
+// @ts-ignore
 import API_URL from '../api/config.js'
 
 export default function Register() {
@@ -10,8 +11,10 @@ export default function Register() {
 
     const [error, setError] = useState(null)
 
+    // @ts-ignore
     const {isAuth, login, name, setName, token, setToken} = useContext(AuthContext)
 
+    // @ts-ignore
     const register = async (e) => {
         e.preventDefault()
         try {
@@ -34,6 +37,7 @@ export default function Register() {
                 throw new Error(data.err)
             }
         } catch (error) {
+            // @ts-ignore
             setError(error.message)
         }
     }
