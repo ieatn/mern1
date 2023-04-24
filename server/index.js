@@ -34,3 +34,5 @@ app.use('/api/users', userRoutes)
 app.get('/', (req, res) => {
     res.send('hello world')
 })
+
+module.exports = app;
