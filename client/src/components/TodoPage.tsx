@@ -84,7 +84,7 @@ export default function TodoPage() {
     <>
     <Navbar />
     <div>
-        <h1 className="text-5xl font-bold text-center">Hero</h1>
+        <h1 className="text-5xl font-bold text-center">Todos</h1>
         
         <div className="flex justify-center">
             <input type="text" onChange={(e) => setTodo(e.target.value)} value={todo} placeholder="add todo" className="border-2 border-gray-200 p-2 rounded-md m-2" />

@@ -10,14 +10,11 @@ export default function Navbar() {
         <nav className="w-full h-16 bg-gray-800 flex items-center justify-center text-white px-6 p-2">
             <h1>Navbar</h1>
             <div className="ml-auto space-x-6 flex">
-                
+                {isAuth && <span>Hello, {name}</span>}
                 <Link to={`/`} className={`hover:text-gray-300`}>Home</Link>
-                <Link to={`/todos`} className={`hover:text-gray-300`}>Dashboard</Link>
-
                 {isAuth ? 
                     (
                         <div className='space-x-6'>
-                            <span>Hello, {name}</span>
                             <Link to={`/todos`} className={`hover:text-gray-300`}>Dashboard</Link>
                             <Link to={`/`} onClick={logout} className={`hover:text-gray-300`}>Logout</Link>
                         </div>
@@ -30,7 +27,6 @@ export default function Navbar() {
                         </div>
                     )
                 }
-                
             </div>
         </nav>
     )

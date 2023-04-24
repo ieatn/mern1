@@ -18,11 +18,8 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      {showProtectedRoute && <ProtectedRoute token={token}/>}
       <div>
-        <p>name: {name}</p>
-        <p>token: {token}</p>
-        <p>auth: {isAuth ? 'true' : 'false'}</p>
+        <h1>hello world</h1>
       </div>
     </div>
   )
